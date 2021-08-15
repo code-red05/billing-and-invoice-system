@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>Login Page!</title>
+		<style>
+			input[type=text], input[type=password], select {
+				width: 100%;
+				padding: 12px 20px;
+				margin: 8px 0;
+				display: inline-block;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-sizing: border-box;
+			}
+
+			input[type=submit] {
+				width: 100%;
+				background-color: #4CAF50;
+				color: white;
+				padding: 14px 20px;
+				margin: 8px 0;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+
+			input[type=submit]:hover {
+				background-color: #45a049;
+			}
+
+			#form {
+				border-radius: 10px;
+				background-color: #f2f2f2;
+				padding: 20px;
+				margin-top: 50px;
+				margin-left: auto;
+				margin-right: auto;
+				width: 600px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="msg" style="margin-top: 10px; color: #FF0000">
+
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for msg in messages %}
+					<center>{{msg}}</center>
+				{% endfor %}
+			{% endif %}
+			{% if not messages %}
+				<br>
+			{% endif %}
+		{% endwith %}
+
+		</div>
+
+		<h1 style="color: #4CAF50; text-align: center;">Login Page</h1>
+
+		<div id="form">
+
+		<form action="#" method="POST">
+			
+			<h2>Enter your login details</h2>
+			<p>Username:</p>
+			<input type="text" name="nm" placeholder="Enter your username..." />
+			<p>Password:</p>
+			<input type="password" name="pwd" placeholder="Enter your password..." />
+			<a href="http://127.0.0.1:5000/forgot_pwd">Forgot Password?</a><br><br><br>
+			<input type="submit" value="Submit"/>
+		
+		</form>
+		
+		<br>
+		
+		</div>
+	
+	</body>
+</html>

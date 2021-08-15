@@ -1,0 +1,131 @@
+<html>
+<head>
+	<title>Print Reciept</title>
+	<script src="{{url_for('static', filename='javascript/textfit.js')}}"></script>
+	<style>
+		table, th{
+  			border: 1px solid black;
+		}
+		td {
+			height: 30px;
+			border: 1px solid black;
+			text-align: center;
+		}
+	</style>
+</head>
+
+<body>
+<div style="width: 950px; height: 630px; padding: 5px; border-style: solid; border-width: 5px; border-color: #cc9900">
+
+	<div style="float:left; height:100%; background-color: #f2f2f2f2">
+		<img src="{{url_for('static', filename='images/main.jpg')}}" style="width: auto; height: 100%">
+	</div>
+
+	<div style="float:right; background-color: #f2f2f2f2; width: 750px;height: 100%;">
+		<center><h1>श्री कृष्णाबाई संस्थान उमामहेश्वर घाट गंगापुरी, वाई</h1></center>
+		<center><h4>रजि. नं. एन्. एस्. ए. ८५३</h4></center>
+		<div style="width: 100%; font-size: 20;line-height: 10px;">
+			{% if date %}
+			{% set split_date = date.split('-') %}
+			{% else %}
+			{% set split_date = ["0000","00","0"] %}
+			{% endif %}
+			<div style="float: left; margin-left: 10px">दिनांक: {{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</div>
+			<div style="float: right; margin-right: 10px">पावती क्रं. {{billno}}</p></div>
+		</div>
+		<br>
+	
+		{% if reciept_type == "1" %}
+		<div id ="main" style = "width:97.5%; height: 370px; background-color: #f2f2f2; padding-left: 10px; padding-right: 10px; background-color: white">
+		<p style="line-height: 30px">{% if not onbehalf == "" %}<b>{{onbehalf}}</b>&emsp;यांच्या स्मरणार्थ &emsp;{% endif %}<b>{{don_name}}</b>&emsp;{% if not company == "" %}<b>{{company}}</b>&emsp;{% endif %}यांजकडून&emsp;<b>{{don_purp}}</b>&emsp;<b>₹ {{amt}}/-</b>&emsp;आज रोजी&emsp;<b>{{don_meth}}</b>&emsp;ने&emsp;मिळाले.&emsp;धन्यवाद!<br>Amount in words: {{amt_words}}</p>
+		{% if not don_meth == "रोख" %}
+			<p>{{don_meth}}&emsp;क्रं.&emsp;{{ref_no}}&emsp;दिनांक:&emsp;{{pay_date}}&emsp;बैंक:&emsp;{{bank}}</p>
+		{% endif %}
+		</div>
+		{% endif %}
+		{% if reciept_type == "2" %}
+		<div style = "width:97.5%; height: 370px; background-color: #f2f2f2; padding-left: 10px; padding-right: 10px; background-color: white">
+		<div id="main" style="width: 100%; height: 190px;">
+		<p style="line-height: 30px">{% if not onbehalf == "" %}<b>{{onbehalf}}</b>&emsp;यांच्या स्मरणार्थ &emsp;{% endif %}<b>{{don_name}}</b>&emsp;{% if not company == "" %}<b>{{company}}</b>&emsp;{% endif %}यांस&emsp;आपणाकडून&emsp;आजरोजी&emsp;खालीलप्रमाणे&emsp;वस्तूरूपाने&emsp;देणगी&emsp;मिळाली.&emsp;धन्यवाद!</p>
+		</div>
+		<div style="float: bottom;">
+		<table style="width: 100%;" cellspacing="0">
+			<tr>
+				<th>क्र.</th>
+				<th>वस्तूचे नाव</th>
+				<th>नग/वजन</th>
+				<th>अंदाजे किंमत</th>
+			</tr>
+			<tr>
+				<td style="width: 30px">१</td>
+				<td style="width: 400px; text-align: left; padding-left: 20px; padding-right: 5px">{{item1[0]}}</td>
+				<td>{{item1[1]}}</td>
+				<td>{% if item1[2] %}₹ {{item1[2]}}{% endif %}</td>
+			</tr>
+			<tr>
+				<td style="width: 30px">२</td>
+				<td style="width: 400px; text-align: left; padding-left: 20px; padding-right: 5px">{{item2[0]}}</td>
+				<td>{{item2[1]}}</td>
+				<td>{% if item2[2] %}₹ {{item2[2]}}{% endif %}</td>
+			</tr>
+			<tr>
+				<td style="width: 30px">३</td>
+				<td style="width: 400px; text-align: left; padding-left: 20px; padding-right: 5px">{{item3[0]}}</td>
+				<td>{{item3[1]}}</td>
+				<td>{% if item3[2] %}₹ {{item3[2]}}{% endif %}</td>
+			</tr>
+			<tr>
+				<td style="width: 30px">४</td>
+				<td style="width: 400px; text-align: left; padding-left: 20px; padding-right: 5px">{{item4[0]}}</td>
+				<td>{{item4[1]}}</td>
+				<td>{% if item4[2] %}₹ {{item4[2]}}{% endif %}</td>
+			</tr>
+			<tr>
+				<td style="width: 30px">५</td>
+				<td style="width: 400px; text-align: left; padding-left: 20px; padding-right: 5px">{{item5[0]}}</td>
+				<td>{{item5[1]}}</td>
+				<td>{% if item5[2] %}₹ {{item5[2]}}{% endif %}</td>
+			</tr>
+		</table>
+		</div>
+		</div>
+		{% endif %}
+		<div style="float:bottom;">
+		<div style="float:left; text-align: center; margin-left: 10px; margin-top: 0px">	
+			<p>उत्सव काल</p>
+			<p><input type="text" readonly="readonly" id="start" value="{{from_date}}" style="background-color: #f2f2f2; border:0; font-size: 15; text-align: center; width: 300px" onfocus="this.blur();" tabindex="-1"></p>
+			<p><input type="text" readonly="readonly" id="end" value="{{to_date}}" style="background-color: #f2f2f2; border:0; font-size: 15; text-align: center; width: 300px;" onfocus="this.blur();" tabindex="-1"></p>
+		</div>
+		<div style="float: right; font-size: 15; padding-right: 10px">
+			<center>
+				
+				<p style="font-size: 20px">{{user}}</p>
+				स्वीकारणार<br>
+				श्री कृष्णाबाई संस्थान उमामहेश्वर घाट गंगापुरी, वाई करीता<br>
+			</center>
+		</div>
+
+	</div>
+
+
+</div>
+<script type="text/javascript">
+
+	textFit(document.getElementById("main"),{maxFontSize: 20});
+	
+	/*var start_date = new Date(document.getElementById('start').value);
+	var end_date = new Date(document.getElementById('end').value);
+	var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August', 'September', 'October', 'November', 'December'];
+	var new_start_date = "";
+	var new_end_date = "";
+	if(start_date != "" && end_date != ""){
+		new_start_date = days[start_date.getDay()] + ", " + start_date.getDate() + " " + months[start_date.getMonth()] + ", " + start_date.getFullYear() + "    ते";
+		new_end_date = days[end_date.getDay()] + ", " + end_date.getDate() + " " + months[end_date.getMonth()] + ", " + end_date.getFullYear();
+	}
+	document.getElementById('start').value = new_start_date;
+	document.getElementById('end').value = new_end_date;*/
+</script>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+<style>
+	input[type=text], input[type=password], select {
+		padding: 12px 20px;
+		margin: 8px 0;
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+	}
+
+	input[type=submit] {
+		width: 100%;
+		background-color: #4CAF50;
+		color: white;
+		padding: 14px 20px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
+
+	input[type=submit]:hover {
+		background-color: #45a049;
+	}
+
+	#form {
+		border-radius: 10px;
+		background-color: #f2f2f2;
+		padding: 20px;
+		margin-top: 50px;
+		margin-left: 250px;
+		margin-right: 300px;
+		float: right;
+		width: 600px;
+	}
+</style>
+
+<script type="text/javascript">
+	function validate(){
+		var name = document.getElementById("name").value;
+		var pwd1 = document.getElementById("pwd1").value;
+		var pwd2 = document.getElementById("pwd2").value;
+		var ques = document.getElementById("question").value;
+		var ans = document.getElementById("answer").value;
+		if(name == ""){
+			alert("Username cannot be blank!");
+			return false;
+		}
+		else if(pwd1 == ""){
+			alert("Password cannot be blank!");
+			return false;
+		}
+		else if(pwd2 == ""){
+			alert("Please Confirm Your Password!");
+			return false;
+		}
+		else if(pwd1.length < 6){
+			alert("Password Should be atleast 6 characters long!");
+			return false;
+		}
+		else if(pwd1 != pwd2){
+			alert("Passwords Do Not Match!");
+			return false;
+		}
+		else if(ques == ""){
+			alert("Please Enter Security Question");
+			return false;
+		}
+		else if(ans == ""){
+			alert("Please Enter Answer");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+</script>
+
+{% endblock %}
+
+{% block navbar %}
+
+<div class="nav1">
+	<ul>
+	  <li><a href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept">Cancel Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/date_change">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report">Generate Report</a></li>
+	  <li><a href="http://127.0.0.1:5000/register" class="active">Create New User</a></li>
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div id="form">
+
+	<form action="#" method="POST" onsubmit="return validate();">
+		
+		<table>
+			<tr>
+				<td style="width: 380px"><font size="5"><b>Enter New User Details</b></font></td>
+				<td width="85px">User Type:</td>
+				<td>
+					<select name="usr_type">
+						<option value="standard">Standard</option>
+						<option value="admin">Admin</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table>
+			<tr>
+				<td>Username:</td>
+				<td><input type="text" name="name" id="name" placeholder="Enter your username..." style="width: 450px"></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input type="password" name="pwd1" id="pwd1" placeholder="Enter your password..." style="width: 450px"></td>
+			</tr>
+			<tr>
+				<td>Confirm Password:</td>
+				<td><input type="password" name="pwd2" id="pwd2" placeholder="Confirm your password..." style="width: 450px"></td>
+			</tr>
+			<tr>
+				<td>Enter Security Question:</td>
+				<td><input type="text" name="question" id="question" placeholder="Required To Reset Password..." style="width: 450px"></td>
+			</tr>
+			<tr>
+				<td>Answer:</td>
+				<td><input type="text" name="answer" id="answer" placeholder="Remember this incase you forget password..." style="width: 450px"></td>
+			</tr>
+		</table>
+		<input type="submit" value="Submit" style="width: 100%">
+	
+	</form>
+
+</div>
+
+{% endblock %}

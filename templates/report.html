@@ -1,0 +1,396 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+
+<style>
+
+	input[type=text], input[type=number], input[type=email], input[type=date], textarea, select {
+	  padding: 8px 10px;
+	  margin: 8px 0;
+	  display: inline-block;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	}
+
+	input[type=button], input[type=submit] {
+		background-color: #4CAF50;
+		color: white;
+		padding: 10px 5px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+	}
+
+	input[type=submit]:hover, input[type=button]:hover{
+		background-color: #45a049;
+	}
+
+	td{
+		text-align: center;
+		height: 40px;
+	}
+
+	th{
+		text-align: center;
+		height: 50px;
+		position: sticky;
+		z-index: 2;
+		top: 0;
+		background: #f2f2f2;
+		border-bottom: 2px solid;
+	}
+
+	#form {
+		padding: 0px;
+		margin-right: 20px;
+		margin-left: 235px;
+		width: 82%;
+		margin-top: 60px;
+		background-color: #f2f2f2;
+		border-radius: 10px;
+		position: fixed;
+		
+	}
+	
+
+</style>
+<script type="text/javascript">
+function subfilter(){
+	var e = document.getElementById("filter");
+	if(e.value == "amt"){
+		document.getElementById('filter_opt').innerHTML = '&emsp;Greater Than:&emsp;<input type="text" name="amt" value="{{amt if amt}}" style="width: 50%">';
+	}
+	else if((e.value == "all")||(e.value == "cancelled")){
+		document.getElementById('filter_opt').innerHTML = '';
+	}
+	else if(e.value == "user"){
+		document.getElementById('filter_opt').innerHTML = '&emsp;Select User:&emsp;<select name ="spec_user">'
+														+ '{% for x in user_list %}'
+														+ '{% if x.name == spec %}<option value = "{{x.name}}" selected>{% else %}<option value = "{{x.name}}">{% endif %}{{x.name}}</option>'
+														+ '{% endfor %}'
+														+ '</select>';
+	}
+	else if(e.value == "don_meth"){
+		document.getElementById('filter_opt').innerHTML = '&emsp;Select Method:&emsp;<select name="donation_meth">'
+														+ '{% for y in pay_list %}'
+														+ '{% if y == meth %}<option value = "{{y}}" selected>{% else %}<option value = "{{y}}">{% endif %}{{y}}</option>'
+														+ '{% endfor %}'
+														+ '</select>'
+	}
+}
+
+function print_report(){
+	window.open("http://127.0.0.1:5000/print_report", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=25,left=30,width=1200,height=550");
+
+}
+
+function change_filter_by(e){
+	document.getElementById('filter_opt').innerHTML = "";
+	if (e.value == "1"){
+		document.getElementById('filter_by').innerHTML = "<select id='filter' name='filter' onchange='subfilter();'>" +
+														 "{% if main == 'all' %}<option value='all' selected>{% else %}<option value='all'>{% endif %}All Users</option>" + 
+														 "{% if main == 'amt' %}<option value='amt' selected>{% else %}<option value='amt'>{% endif %}Amount</option>" +
+														 "{% if main == 'user' %}<option value='user' selected>{% else %}<option value='user'>{% endif %}User</option>" +
+														 "{% if main == 'don_meth' %}<option value='don_meth' selected>{% else %}<option value='don_meth'>{% endif %}Payment Method</option>" +
+														 "{% if main == 'cancelled' %}<option value='cancelled' selected>{% else %}<option value='cancelled'>{% endif %}Cancelled</option>" +
+														 "</select>";
+	}
+	else{
+		document.getElementById('filter_by').innerHTML = "<select id='filter' name='filter' onchange='subfilter();'>" +
+														 "{% if main == 'all' %}<option value='all' selected>{% else %}<option value='all'>{% endif %}All Users</option>" + 
+														 "{% if main == 'amt' %}<option value='amt' selected>{% else %}<option value='amt'>{% endif %}Amount</option>" +
+														 "{% if main == 'user' %}<option value='user' selected>{% else %}<option value='user'>{% endif %}User</option>" +
+														 "{% if main == 'cancelled' %}<option value='cancelled' selected>{% else %}<option value='cancelled'>{% endif %}Cancelled</option>" +
+														 "</select>";
+	}
+}
+</script>
+
+{% endblock %}
+
+{% block navbar %}
+<div class="nav1">
+	<ul>
+	  <li><a href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept">Cancel Reciept</a></li>
+	  {% endif %}
+	  <li><a href="http://127.0.0.1:5000/date_change">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report" class="active">Generate Report</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/register">Create New User</a></li>
+	  {% endif %}
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+
+<div id="form">
+
+	<form action="#" method="POST" id="find">
+		<input type="hidden" name="formname" value="find">
+		<div style="width : 100%;padding-left: 10px;">
+			<div style="width: 620px; float: left;">
+				<table>
+					<tr>
+						<td>Reciept:</td>
+						<td><select name="type" id="type" onchange="change_filter_by(this)">
+								{% if type == "1" %}<option value="1" selected>{% else %}<option value="1">{% endif %}1</option>
+								{% if type == "2" %}<option value="2" selected>{% else %}<option value="2">{% endif %}2</option>
+							</select>
+						</td>
+						<td style="width: 100px">Filter By:</td>
+						<td style="width: 150px"><div id="filter_by"></div>
+						</td>
+						<td style="width: 300px; text-align: left"><div id="filter_opt"></div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="float: right; width: 540px;">
+				<table>
+					<tr>
+						<td>Date:</td>
+						{% if date1 %}
+						<td><input type="date" id="datePicker" name="date1" value="{{date1}}" style="margin-left: 10px; width: 150px"></td>
+						{% else %}
+						<td><input type="date" id="datePicker" name="date1" style="margin-left: 10px; width: 150px"><script>today();</script></td>
+						{% endif %}
+						<td style="text-align: center; width: 30px;">To</td>
+						<td><input type="date" id="datePicker2" name="date2" value="{{date2 if date2}}" style="width: 150px"></td>
+						<td style="width: 120px"><input type="submit" value="Apply" form="find" style="margin-left: 10px;width: 100px;"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<script type="text/javascript"> 
+
+change_filter_by(document.getElementById('type'));
+
+subfilter();
+
+Date.prototype.today = (function() {
+var local = new Date(this);
+local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+return local.toJSON().slice(0,10);
+});
+
+
+//document.getElementById('datePicker').value = new Date().today();
+
+function today(){
+	alert("ok");
+	document.getElementById('datePicker').value = new Date().today();
+	/*var date = new Date().today();
+	return date;*/
+}
+
+
+</script>
+
+	
+<div style="float: right;width: 82%; margin-right: 20px; margin-top: 70px">
+
+{% if not rec == None %}
+{% if rec|length == 0 %}
+<br>
+<center>No Records Found!</center>
+{% else %}
+{% if type == "1" %}
+<div style="float: right; width: 100%; background-color: #f2f2f2; border-radius: 10px; margin-top: 10px; padding-top: 0px; height: 465px; overflow: auto;">
+	<table cellspacing="0">
+		<thead>
+			<tr>
+				<th>Receipt No.</th>
+				<th>Issued By</th>
+				<th>Date</th>
+				<th>Donor Name</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>On Behalf Of</th>
+				{% endif %}
+				<th>Donation Purpose</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>Payment Method</th>
+				<th>Amount</th>
+				{% else %}
+				<th>Amount</th>
+				<th>Cancelled By</th>
+				<th>Comments</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in rec %}
+			<tr style="box-shadow: 0px 0px 0px 1px #d6d6d6">
+				<td style="width: 50px">{{x.Reciept_No}}</td>
+				<td style="width: 100px">{{x.Issued_By}}</td>
+				{% if x.Date %}
+				{% set split_date = x.Date.split('-') %}
+				{% else %}
+				{% set split_date = ["0000","00","0"] %}
+				{% endif %}
+				<td style="width: 80px">{{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</td>
+				<td style="width: 300px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px">{{x.Donor_Name if x.Donor_Name}}{{x.Company if x.Company}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 300px; padding-top: 10px; padding-bottom: 10px">{{x.On_Behalf_Of if x.On_Behalf_Of}}</td>
+				{% endif %}
+				<td style="width: 100px">{{x.Donation_Purpose}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 80px">{{x.Donation_Method}}</td>
+				<td style="width: 100px">₹ {{x.Amount}}</td>
+				{% else %}
+				<td style="width: 100px">₹ {{x.Amount}}</td>
+				<td style="width: 100px">{{x.Cancelled_by}}</td>
+				<td style="width: 200px">{{x.Comments}}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% if rec[0].cancelled == "N" %}
+<div style="float: right; padding-top: 15px">
+	<table style="font-weight: bold">
+		<tr>
+			<td style="width: 150px">कायमनिधी: ₹ {{kayam}}/-</td>
+			<td style="width: 150px">देणगी: ₹ {{dendgi}}/-</td>
+			<td style="width: 150px">महाप्रसाद: ₹ {{mahaprasad}}/-</td>
+			<td style="width: 150px">जाहिरात: ₹ {{jahirat}}/-</td>
+			<td style="width: 150px">माल विक्री: ₹ {{malvikri}}/-</td>
+			<td style="width: 100px">Total Amount: </td>
+			<td style="width: 100px">₹ {{total}}/-</td>
+		</tr>
+	</table>
+</div>
+{% endif %}
+{% else %}
+<div style="float: right; width: 100%; background-color: #f2f2f2; border-radius: 10px; margin-top: 10px; padding-top: 0px; height: 465px; overflow: auto;">
+	<table cellspacing="0">
+		<thead>
+			<tr>
+				<th>Receipt No.</th>
+				<th>Issued By</th>
+				<th>Date</th>
+				<th>Donor Name</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>On Behalf Of</th>
+				{% endif %}
+				<th style="width: 120px">Items</th>
+				<th>Quantity</th>
+				<th style="width: 100px">Amount</th>
+				{% if rec[0].cancelled == "Y" %}
+				<th>Cancelled By</th>
+				<th>Comments</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in rec %}
+			<tr style="box-shadow: 0px 0px 0px 1px #d6d6d6">
+				<td style="width: 50px">{{x.Reciept_No}}</td>
+				<td style="width: 100px">{{x.Issued_By}}</td>
+				{% if x.Date %}
+				{% set split_date = x.Date.split('-') %}
+				{% else %}
+				{% set split_date = ["0000","00","0"] %}
+				{% endif %}
+				<td style="width: 80px">{{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</td>
+				<td style="width: 300px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px">{{x.Donor_Name if x.Donor_Name}}{{x.Company if x.Company}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 300px; padding-top: 10px; padding-bottom: 10px;">{{x.On_Behalf_Of if x.On_Behalf_Of}}</td>
+				{% endif %}
+				<td colspan="3">
+					<style>.item_table td{height: 20px;}</style>
+					<table class="item_table">
+						<tr>
+							<td style="width: 120px">{{x.Item_1}}</td>
+							<td style="width: 55px">{{x.Quantity_1}}</td>
+							<td style="width: 90px">{{x.Price_1}}</td>
+						</tr>
+						{% if not x.Item_2 == "" %}
+						<tr>
+							<td>{{x.Item_2}}</td>
+							<td>{{x.Quantity_2}}</td>
+							<td>{{x.Price_2}}</td>
+						</tr>
+						{% if not x.Item_3 == "" %}
+						<tr>
+							<td>{{x.Item_3}}</td>
+							<td>{{x.Quantity_3}}</td>
+							<td>{{x.Price_3}}</td>
+						</tr>
+						{% if not x.Item_4 == "" %}
+						<tr>
+							<td>{{x.Item_4}}</td>
+							<td>{{x.Quantity_4}}</td>
+							<td>{{x.Price_4}}</td>
+						</tr>
+						{% if not x.Item_5 == "" %}
+						<tr>
+							<td>{{x.Item_5}}</td>
+							<td>{{x.Quantity_5}}</td>
+							<td>{{x.Price_5}}</td>
+						</tr>
+						{% endif %}
+						{% endif %}
+						{% endif %}
+						{% endif %}
+					</table>
+				</td>
+				{% if x.cancelled == "Y" %}
+				<td>{{x.Cancelled_By}}</td>
+				<td>{{x.Comments}}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% if rec[0].cancelled == "N" %}
+<div style="float: right; padding-top: 15px; margin-right: 100px">
+	<table style="font-weight: bold">
+		<tr>
+			<td style="width: 150px">६ वारी साडी: {{saree1}}</td>
+			<td style="width: 150px">९ वारी साडी: {{saree2}}</td>
+			<td style="width: 150px">पैठणी: {{saree3}}</td>
+			<td style="width: 150px">शालू: {{saree4}}</td>
+			<td style="width: 100px">Total Sarees: </td>
+			<td style="width: 100px">{{saree1+saree2+saree3+saree4}}</td>
+		</tr>
+	</table>
+</div>
+{% endif %}
+{% endif %}
+<div style="float:left; margin-top: 10px; width:150px">
+	<form action="#" method="POST" id="download" style="float:left">
+		<input type="hidden" name="formname" value="download">
+		<input type="hidden" name="rectype" value="{{type if type}}">
+		<input type="submit" value="Download" style="width: 75px">
+	</form>
+	<!--<form action="#" method="POST" id="print" style="float:right; margin-left: 10px">
+		<input type="hidden" name="formname" value="print">
+		<input type="hidden" name="rectype" value="{{type if type}}">
+		<input type="submit" value="Print" style="background-color: #337ab7; width: 70px">
+	</form>-->
+	<input type="button" value="Print" style="background-color: #337ab7; width: 70px; float:right;" onclick="print_report()">
+
+</div>
+{% endif %}
+{% endif %}
+</div>
+
+{% endblock %}

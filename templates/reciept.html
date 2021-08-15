@@ -1,0 +1,427 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+<script type="text/javascript">
+	function preventBack(){window.history.forward();}
+    setTimeout("preventBack()", 0);
+    window.onunload=function(){null};
+
+	function validateForm() {
+		
+		var form = document.getElementById('reciept');
+
+		var indicomp = document.getElementsByName('indicomp');
+	 	var name = document.getElementById('nm').value;
+	 	var company = document.getElementById('company').value;
+	 	var addr = document.getElementById('address').value;
+	 	var country = document.getElementById('country').value;
+	 	var mobile = document.getElementById('mobile').value;
+	 	var std = document.getElementById('std').value;
+		var landline = document.getElementById('landline').value;
+	 	var amt = document.getElementById('amt').value;
+	 	var amt_words = document.getElementById('amt_words').value;
+	 	var purp = document.getElementById('purp').value;
+	 	var meth = document.getElementById('meth').value;
+	 	
+	 	var regex = /[0-9]/g;
+
+	 	if((indicomp[0].checked) && (name == "")){
+		   	alert("Donor Name cannot be blank!");
+		    
+	  	}
+
+	  	else if((indicomp[1].checked) && (company == "")){
+	  		alert("Please Enter Company Name!");
+	  		
+	  	}
+	  	else if(addr == ""){
+	  		alert("Please Enter Address!");
+	  	}
+  		else if((std != "" && landline == "") || (std == "" && landline != "")){
+  			alert("Enter Proper Telephone no. with correct std/isd code!");
+  		}
+  		else if (purp == ""){
+  			alert("Mention Donation Purpose!");
+  			
+  		}
+  		else if (amt == ""){
+  			alert("Amount field cannot be empty!");
+  			
+  		}
+  		else if (!(regex.test(amt))){
+  			alert("Enter Amount Using English Numbers!");
+  		}
+  		else if (amt_words == ""){
+  			alert("Enter Amount in Words!");
+  		}
+  		else if (meth != "रोख"){
+  			var payno = document.getElementById('payno').value;
+  			var paydate = document.getElementById('paydate').value;
+  			var bank = document.getElementById('bank').value;
+  			if (payno == "" && meth != "आर टी जी एस" && meth != "एन ई एफ टी"){
+  				if(meth == "आय एम पी एस"){
+  					alert("Enter UTR Number");
+  				}
+  				else{
+  					alert("Enter Payment Reference Number");
+  				}
+  			}
+  			else if (paydate == ""){
+  				alert("Enter Payment Date!");
+  				
+  			}
+  			else if (bank == ""){
+  				alert("Enter Bank Name");
+  				
+  			}
+  			else{
+  				form.submit();
+				window.open("http://127.0.0.1:5000/temp", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=25,left=50,width=900,height=650");
+
+  			}
+  			
+  		}
+  		else{
+  			form.submit();
+			window.open("http://127.0.0.1:5000/temp", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=25,left=50,width=900,height=650");
+  		}
+  	}
+
+
+</script>
+
+<style>
+
+	input[type=text], input[type=number], input[type=email], input[type=date], textarea, select {
+	  padding: 8px 20px;
+	  margin: 8px 0;
+	  display: inline-block;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	}
+
+	input[type=button] {
+		width: 10%;
+		background-color: #4CAF50;
+		color: white;
+		padding: 12px 20px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+	}
+
+	input[type=submit]:hover, input[type=button]:hover {
+		background-color: #45a049;
+	}
+
+	td {
+		width: 160px;
+	}
+
+	#form {
+		padding: 10px;
+		margin-right: 40px;
+		float: right;
+		width: 80%;
+		margin-top: 0px;
+		height: 80%;
+		line-height: 14px
+	}
+
+</style>
+
+{% endblock %}
+
+{% block navbar %}
+<div class="nav1">
+	<ul>
+	  <li><a class="active" href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept">Cancel Reciept</a></li>
+	  {% endif %}
+	  <li><a href="http://127.0.0.1:5000/date_change">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report">Generate Report</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/register">Create New User</a></li>
+	  {% endif %}
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div id="form">
+
+	<form action="#" method="POST" id="reciept" name="reciept" required>
+
+		
+		<div id="details" style="width: 100%; float:left; padding-top: 0px; padding-left: 10px; padding-bottom: 0px; padding-right: 20px;background-color: #f2f2f2; border-radius: 10px" >
+	
+			
+			<div style="float: right; margin-right: 105px ">
+				<label for="date" style="margin-left:0px">दिनांक:</label>
+				<input type="date" name="date" id="datePicker" style="padding: 6px 10px; margin-left: 45px; width:150px;">
+			</div>
+			<div style="float: left;width: 50%">
+
+				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+				<input type="radio" name="indicomp" value="individual" id="indi" checked="checked" onclick="indiv()">
+				<label for="individual">वैयक्तिक</label>
+				&emsp;&emsp;&emsp;&emsp;
+				<input type="radio" name="indicomp" value="org" id="comp" onclick="orga();">
+				<label for="org">संस्था</label>
+				<p font=20px><b>देणार्‍याचा तपशील:</b></p>
+				<div id="name" style="padding-top: 0px; margin-top: 0px; margin-bottom: 10px;">
+
+					<table>
+						<tr>
+							<td>देणार्‍याचे नाव:</td>
+							<td>
+								<textarea rows="3" name="name" id="nm" placeholder="Enter Donor Name(s)" style="width: 425px"></textarea>
+						</tr>
+						<tr>
+							<td style="padding-right: 24px; font-size: 16 "><input type="checkbox" id="behalfcheck" name="behalfcheck" onclick="on_behalf()" value="check"><label for="behalfcheck" style="padding-left: 20px">प्रीत्यर्थ:</label></td>
+							<td>
+							<textarea rows="3" name="onbehalf" disabled="disabled" id="onbehalf" placeholder="Multiple Entries Allowed (optional field)" style="width: 100%;"></textarea>
+							</td>
+						</tr>
+					</table>
+						
+				</div>
+				<label for="company">संस्थेचे नाव:</label>
+				<input type="text" id="company" disabled name="company" placeholder="Enter Name of Organization" style="width: 100%;">
+			
+			</div>
+
+			<div style="float: right; margin-right:100px; margin-top: 15px">
+				
+				<table>
+					<tr>
+						<td>पत्ता:</td>
+						<td><textarea rows="3" id ="address" name="address" style="width: 250px" placeholder="Enter Address"></textarea></td>
+					</tr>
+					<tr>
+						<td>मोबाइल नंबर.:</td>
+						<td><input type="text" name="country" id="country" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 43" value="+91" style="width: 70px" maxlength="5"><input type="text" id="mobile" name="mobile_no" style="width: 180px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" placeholder="Enter Mobile Number"></td>
+					</tr>
+					<tr>
+						<td>दूरध्वनी नंबर:</td>
+						<td><input type="text" id="std" name="std" style="width: 70px; padding: 8px 8px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" placeholder="STD/ISD"><input type="text" id="landline" name="landline_no" style="width: 180px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" placeholder="Enter Number"></td>
+					</tr>
+					<tr>
+						<td>ईमेल आयडी:</td>
+						<td><input type="email" name="email" style="width: 250px" placeholder="Enter Email Id (optional)"></td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="money" style="float: left; padding-top: 0px; padding-left: 10px; padding-bottom: 10px; padding-right: 10px; width: 100%; background-color: #f2f2f2; border-radius: 0px 0px 10px 10px" >
+				
+				<div style="float: left;width: 50%;">
+
+					<p><b>देणगीचा तपशील:</b><!--&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;--></p>
+					<table>
+						<tr>
+							<td>स्वरूप:</td>
+							<td><select name="donation_purp" id="purp" style="width:100%" onchange="OtherBox1(this)">
+								<option value="">Select</option>
+								<option value="कायमनिधी">कायमनिधी</option>
+								<option value="देणगी">देणगी</option>
+								<option value="माल विक्री">माल विक्री</option>
+								<option value="महाप्रसाद">महाप्रसाद</option>
+								<option value="जाहिरात">जाहिरात</option>
+								<option value="Other">ईतर</option>
+							</select></td>
+							<td><input name="otherdon" id ="otherdon" type="text" placeholder="Mention other type" style="display: none;width: 100%"></td>
+						</tr>
+						<tr>
+							<td>रक्कम: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;₹ </td>
+							<td><input type="text" style="width: 100%" name="amt" placeholder="Enter amt." id="amt" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></p></td>
+							<td>/-</td>
+						</tr>
+						<tr>
+							<td>अक्षरी रुपये:</td>
+							<td colspan="2"><input type="text" name="amt_words" id="amt_words" style="width:388px" placeholder="Amount in words">
+					</table>
+					<br>
+					
+				</div>
+
+				<div id="payment" style="float:right; margin-right: 0px; text-align: left ;display:block">
+
+					<table style="margin-right: 38px">
+						<tr>
+							<td>पद्धत:</td>
+							<td>
+							<select name="donation_meth" id="meth" onchange="PaymentDetails(this)">
+								<option value="रोख">रोख</option>
+								<option value="चेक">चेक</option>
+								<option value="डी डी">डी डी</option>
+								<option value="आर टी जी एस">आर टी जी एस</option>
+								<option value="एन ई एफ टी">एन ई एफ टी</option>
+								<option value="आय एम पी एस">आय एम पी एस</option>
+								<option value="मनी ऑर्डर">मनी ऑर्डर</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							</td>
+							<td><input name="otherpay" id ="otherpay" type="text" placeholder="Mention other type" onchange="OtherBox2(this)" style="width: 160px;display: none;"></td>
+						</tr>
+					</table>
+
+					<div id="pay">
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</form>
+
+	<div style="margin-top: 0px; float: bottom">
+	
+		<center><input type="button" value="Submit" onclick="validateForm();" style="margin-top: 10px"></center>
+
+	</div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+	Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+	});
+
+	document.getElementById('datePicker').value = new Date().toDateInputValue();
+	
+	function OtherBox1(e){
+		if(e.value.localeCompare("Other")){
+			document.getElementById("otherdon").style.display = 'none';
+		}
+		else{
+			document.getElementById("otherdon").style.display = '';
+		}
+	}
+
+	function OtherBox2(e){
+		var value = e.value;
+		document.getElementById('pay').innerHTML= '<table>'
+												+ '<tr><td>' + value + ' Ref/Tran नंबर:</td>'
+												+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+												+ '<tr><td>' + value + ' दिनांक:</td>'
+												+ '<td><input type="date" id="paydate" name="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+												+ '<tr><td>बँकेचे नाव:</td>'
+												+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of Bank" style="width: 100%"></td></tr>'
+												+ '</table>';
+	}
+
+	function PaymentDetails(e){
+		var value = e.value;
+		if(value.localeCompare("ईतर")==0){
+			document.getElementById("otherpay").style.display = '';
+
+		}
+		else{
+			document.getElementById("otherpay").style.display = 'none';
+			if(value.localeCompare("रोख")==0){
+				document.getElementById('pay').innerHTML= "";
+			}
+			else if(value.localeCompare("आर टी जी एस")==0){
+				document.getElementById('pay').innerHTML= '<table>'
+														+ '<tr style="display: None;"><td>' + value + ' नंबर:</td>'
+														+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+														+ '<tr><td>' + value + ' दिनांक:</td>'
+														+ '<td><input type="date" name="paydate" id="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+														+ '<tr><td>बँकेचे नाव:</td>'
+														+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of Bank" style="width: 100%"></td></tr>'
+														+ '</table>';
+			}
+			else if(value.localeCompare("एन ई एफ टी")==0){
+				document.getElementById('pay').innerHTML= '<table>'
+														+ '<tr style="display: None"><td>' + value + ' नंबर:</td>'
+														+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+														+ '<tr><td>' + value + ' दिनांक:</td>'
+														+ '<td><input type="date" name="paydate" id="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+														+ '<tr><td>बँकेचे नाव:</td>'
+														+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of Bank" style="width: 100%"></td></tr>'
+														+ '</table>';
+			}
+			else if(value.localeCompare("आय एम पी एस")==0){
+				document.getElementById('pay').innerHTML= '<table>'
+														+ '<tr><td>यू टी आर नंबर:</td>'
+														+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+														+ '<tr><td>' + value + ' दिनांक:</td>'
+														+ '<td><input type="date" name="paydate" id="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+														+ '<tr><td>बँकेचे नाव:</td>'
+														+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of Bank" style="width: 100%"></td></tr>'
+														+ '</table>';
+			}
+			else if(value.localeCompare("मनी ऑर्डर")==0){
+				document.getElementById('pay').innerHTML= '<table>'
+														+ '<tr><td>' + value + ' नंबर:</td>'
+														+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+														+ '<tr><td>' + value + ' दिनांक:</td>'
+														+ '<td><input type="date" name="paydate" id="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+														+ '<tr><td>पी. ओ. नाव:</td>'
+														+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of P.O." style="width: 100%"></td></tr>'
+														+ '</table>';
+			}
+			else{
+				document.getElementById('pay').innerHTML= '<table>'
+														+ '<tr><td>' + value + ' नंबर:</td>'
+														+ '<td><input type="text" name="payno" id="payno" placeholder="Enter number" style="width: 100%"></td></tr>'
+														+ '<tr><td>' + value + ' दिनांक:</td>'
+														+ '<td><input type="date" name="paydate" id="paydate" placeholder="Enter Date" style="width: 100%"></td></tr>'
+														+ '<tr><td>बँकेचे नाव:</td>'
+														+ '<td><input type="text" name="bank" id="bank" placeholder="Enter name of Bank" style="width: 100%"></td></tr>'
+														+ '</table>';
+			}
+		}	
+	}
+
+  	
+  	function indiv() {
+  		document.getElementById("company").disabled = true;
+  		document.getElementById("nm").disabled = false;
+  		document.getElementById("behalfcheck").checked = false
+  		document.getElementById("onbehalf").disabled = true;
+  	}
+
+  	function orga(){
+  		document.getElementById("company").disabled = false;
+  		document.getElementById("nm").disabled = true;
+  		document.getElementById("behalfcheck").checked = false
+  		document.getElementById("onbehalf").disabled = true;
+  	}
+
+  	function on_behalf() {
+  		var checkbox = document.getElementById("behalfcheck");
+  		if(checkbox.checked == true){
+  			document.getElementById("onbehalf").removeAttribute("disabled")
+  		}
+  		else{
+  			document.getElementById("onbehalf").setAttribute("disabled", "disabled");		
+  		}
+  	}
+
+
+
+  	
+
+</script>
+
+{% endblock %}

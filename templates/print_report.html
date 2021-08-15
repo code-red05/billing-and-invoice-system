@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Print Report</title>
+	<style>
+	td{
+		text-align: center;
+		height: 40px;
+	}
+
+	th{
+		text-align: center;
+		height: 50px;
+		position: sticky;
+		z-index: 2;
+		top: 0;
+		background: #f2f2f2;
+		border-bottom: 2px solid;
+	}
+	</style>
+</head>
+<body>
+{% if not rec == None %}
+{% if rec|length == 0 %}
+<br>
+<center>No Records Found!</center>
+{% else %}
+{% if type == "1" %}
+<div style="float: right; width: 100%; background-color: #f2f2f2; border-radius: 10px; margin-top: 10px; padding-top: 0px;">
+	<center>
+	<table cellspacing="0" style="margin-left: 5px">
+		<thead>
+			<tr>
+				<th>Receipt No.</th>
+				<th>Issued By</th>
+				<th>Date</th>
+				<th>Donor Name</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>On Behalf Of</th>
+				{% endif %}
+				<th>Donation Purpose</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>Payment Method</th>
+				<th>Amount</th>
+				{% else %}
+				<th>Amount</th>
+				<th>Cancelled By</th>
+				<th>Comments</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in rec %}
+			<tr style="box-shadow: 0px 0px 0px 1px #d6d6d6">
+				<td style="width: 50px">{{x.Reciept_No}}</td>
+				<td style="width: 150px">{{x.Issued_By}}</td>
+				{% if x.Date %}
+				{% set split_date = x.Date.split('-') %}
+				{% else %}
+				{% set split_date = ["0000","00","0"] %}
+				{% endif %}
+				<td style="width: 80px">{{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</td>
+				<td style="width: 300px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px">{{x.Donor_Name if x.Donor_Name}}{{x.Company if x.Company}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 300px; padding-top: 10px; padding-bottom: 10px; padding-left: 20px">{{x.On_Behalf_Of if x.On_Behalf_Of}}</td>
+				{% endif %}
+				<td style="width: 100px">{{x.Donation_Purpose}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 80px">{{x.Donation_Method}}</td>
+				<td style="width: 100px">₹ {{x.Amount}}</td>
+				{% else %}
+				<td style="width: 100px">₹ {{x.Amount}}</td>
+				<td style="width: 100px">{{x.Cancelled_by}}</td>
+				<td style="width: 200px">{{x.Comments}}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</center>
+</div>
+{% if rec[0].cancelled == "N" %}
+<!--<div style="float: right; padding-top: 15px">
+	<table style="font-weight: bold">
+		<tr>
+			<td style="width: 150px">कायमनिधी: ₹ {{kayam}}/-</td>
+			<td style="width: 150px">देणगी: ₹ {{dendgi}}/-</td>
+			<td style="width: 150px">महाप्रसाद: ₹ {{mahaprasad}}/-</td>
+			<td style="width: 150px">जाहिरात: ₹ {{jahirat}}/-</td>
+			<td style="width: 150px">माल विक्री: ₹ {{malvikri}}/-</td>
+			<td style="width: 100px">Total Amount: </td>
+			<td style="width: 100px">₹ {{total}}/-</td>
+		</tr>
+	</table>
+</div>-->
+{% endif %}
+{% else %}
+<div style="float: right; width: 100%; background-color: #f2f2f2; border-radius: 10px; margin-top: 10px; padding-top: 0px;">
+	<center><table cellspacing="0";>
+		<thead>
+			<tr>
+				<th>Receipt No.</th>
+				<th>Issued By</th>
+				<th>Date</th>
+				<th>Donor Name</th>
+				{% if rec[0].cancelled == "N" %}
+				<th>On Behalf Of</th>
+				{% endif %}
+				<th style="width: 150px">Items</th>
+				<th style="width: 90px">Quantity</th>
+				<th style="width: 100px">Amount</th>
+				{% if rec[0].cancelled == "Y" %}
+				<th>Cancelled By</th>
+				<th>Comments</th>
+				{% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in rec %}
+			<tr style="box-shadow: 0px 0px 0px 1px #d6d6d6">
+				<td style="width: 50px">{{x.Reciept_No}}</td>
+				<td style="width: 150px">{{x.Issued_By}}</td>
+				{% if x.Date %}
+				{% set split_date = x.Date.split('-') %}
+				{% else %}
+				{% set split_date = ["0000","00","0"] %}
+				{% endif %}
+				<td style="width: 100px">{{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</td>
+				<td style="width: 300px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px">{{x.Donor_Name if x.Donor_Name}}{{x.Company if x.Company}}</td>
+				{% if x.cancelled == "N" %}
+				<td style="width: 300px; padding-top: 10px; padding-bottom: 10px;">{{x.On_Behalf_Of if x.On_Behalf_Of}}</td>
+				{% endif %}
+				<td colspan="3">
+					<style>.item_table td{height: 20px;}</style>
+					<table class="item_table">
+						<tr>
+							<td style="width: 150px;">{{x.Item_1}}</td>
+							<td style="width: 90px;">{{x.Quantity_1}}</td>
+							<td style="width: 100px;">{{x.Price_1}}</td>
+						</tr>
+						{% if not x.Item_2 == "" %}
+						<tr>
+							<td>{{x.Item_2}}</td>
+							<td>{{x.Quantity_2}}</td>
+							<td>{{x.Price_2}}</td>
+						</tr>
+						{% if not x.Item_3 == "" %}
+						<tr>
+							<td>{{x.Item_3}}</td>
+							<td>{{x.Quantity_3}}</td>
+							<td>{{x.Price_3}}</td>
+						</tr>
+						{% if not x.Item_4 == "" %}
+						<tr>
+							<td>{{x.Item_4}}</td>
+							<td>{{x.Quantity_4}}</td>
+							<td>{{x.Price_4}}</td>
+						</tr>
+						{% if not x.Item_5 == "" %}
+						<tr>
+							<td>{{x.Item_5}}</td>
+							<td>{{x.Quantity_5}}</td>
+							<td>{{x.Price_5}}</td>
+						</tr>
+						{% endif %}
+						{% endif %}
+						{% endif %}
+						{% endif %}
+					</table>
+				</td>
+				{% if x.cancelled == "Y" %}
+				<td>{{x.Cancelled_By}}</td>
+				<td>{{x.Comments}}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</center>
+</div>
+<!--{% if rec[0].cancelled == "N" %}
+<div style="float: right; padding-top: 15px; margin-right: 100px">
+	<table style="font-weight: bold">
+		<tr>
+			<td style="width: 150px">६ वारी साडी: {{saree1}}</td>
+			<td style="width: 150px">९ वारी साडी: {{saree2}}</td>
+			<td style="width: 150px">पैठणी: {{saree3}}</td>
+			<td style="width: 150px">शालू: {{saree4}}</td>
+			<td style="width: 100px">Total Sarees: </td>
+			<td style="width: 100px"></td>
+		</tr>
+	</table>
+</div>
+{% endif %}-->
+{% endif %}
+<!--<div style="float:left; margin-top: 10px; width:150px">
+	<form action="#" method="POST" id="download" style="float:left">
+		<input type="hidden" name="formname" value="download">
+		<input type="hidden" name="rectype" value="{{type if type}}">
+		<input type="submit" value="Download" style="width: 75px">
+	</form>
+	<form action="#" method="POST" id="print" style="float:right; margin-left: 10px">
+		<input type="hidden" name="formname" value="print">
+		<input type="hidden" name="rectype" value="{{type if type}}">
+		<input type="submit" value="Print" style="background-color: #337ab7; width: 70px">
+	</form>
+	<input type="button" value="Print" style="background-color: #337ab7; width: 70px; float:right;" onclick="print_report()">
+-->
+</div>
+{% endif %}
+{% endif %}
+</div>
+</body>
+</html>

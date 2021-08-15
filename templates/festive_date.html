@@ -1,0 +1,92 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+
+<style>
+
+	input[type=text], input[type=number], input[type=email], input[type=date], textarea, select {
+	  padding: 8px 20px;
+	  margin: 8px 0;
+	  display: inline-block;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	}
+
+	input[type=button], input[type=submit] {
+		background-color: #4CAF50;
+		color: white;
+		padding: 10px 10px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+	}
+
+	input[type=submit]:hover, input[type=button]:hover{
+		background-color: #45a049;
+	}
+
+	td {
+		width: 160px;
+	}
+
+	#form{
+		padding: 10px;
+		margin-right: 30px;
+		float: right;
+		width: 80%;
+		margin-top: 0px;
+		height: 80%;
+		line-height: 14px
+	}
+
+</style>
+
+{% endblock %}
+
+{% block navbar %}
+<div class="nav1">
+	<ul>
+	  <li><a href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept">Cancel Reciept</a></li>
+	  {% endif %}
+	  <li><a href="http://127.0.0.1:5000/date_change" class="active">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report">Generate Report</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/register">Create New User</a></li>
+	  {% endif %}
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div id="form">
+	<center>
+		<div style="background-color: #f2f2f2; width: 40%; margin-top: 100px; border-radius: 10px; border: none;">
+			<form method="POST" action="#">
+				<table>
+					<tr>
+						<td>Start Date: </td>
+						<td><input type="text" name="start_date" id="start" value="{{start if start}}"></td>
+					</tr>
+					<tr>
+						<td>End Date: </td>
+						<td><input type="text" name="end_date" id="end" value="{{end if end}}"></td>
+					</tr>
+				</table>
+				<input type="submit" value="Update" style="width: 100px; margin-top: 40px">
+			</form>
+		</div>
+	</center>
+</div>
+
+{% endblock %}

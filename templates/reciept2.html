@@ -1,0 +1,482 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+<style>
+
+	input[type=text], input[type=number], input[type=email], input[type=date], textarea{
+	  padding: 8px 10px;
+	  margin: 7px 0px;
+	  display: inline-block;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	}
+
+	select{
+		padding: 8px 10px;
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+	}
+
+	input[type=button] {
+		width: 10%;
+		background-color: #4CAF50;
+		color: white;
+		padding: 12px 20px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+	}
+
+	input[type=submit]:hover, input[type=button]:hover {
+		background-color: #45a049;
+	}
+
+	td {
+		width: 160px;
+
+	}
+
+	#form {
+		padding: 10px;
+		margin-right: 40px;
+		float: right;
+		width: 80%;
+		margin-top: 0px;
+		height: 80%;
+		line-height: 14px
+	}
+
+</style>
+
+<script type="text/javascript">
+	function preventBack(){window.history.forward();}
+    setTimeout("preventBack()", 0);
+    window.onunload=function(){null};
+
+
+	function validateForm() {
+		
+		var frm = document.getElementById('reciept2');
+
+		var indicomp = document.getElementsByName('indicomp');
+	 	var name = document.getElementById('nm').value;
+	 	var company = document.getElementById('company').value;
+	 	var addr = document.getElementById('address').value;
+	 	var country = document.getElementById('country').value;
+	 	var mobile = document.getElementById('mobile').value;
+	 	var std = document.getElementById('std').value;
+		var landline = document.getElementById('landline').value;
+		var item1 = document.getElementById('item1').value;
+		var item2 = document.getElementById('item2').value;
+		var item3 = document.getElementById('item3').value;
+		var item4 = document.getElementById('item4').value;
+		var item5 = document.getElementById('item5').value;
+		var weight1 = document.getElementById('weight1').value;
+		var weight2 = document.getElementById('weight2').value;
+		var weight3 = document.getElementById('weight3').value;
+		var weight4 = document.getElementById('weight4').value;
+		var weight5 = document.getElementById('weight5').value;
+		var price1 = document.getElementById('price1').value;
+		var price2 = document.getElementById('price2').value;
+		var price3 = document.getElementById('price3').value;
+		var price4 = document.getElementById('price4').value;
+		var price5 = document.getElementById('price5').value;
+		var oth1 = document.getElementById('other1').value;
+		var oth2 = document.getElementById('other2').value;
+		var oth3 = document.getElementById('other3').value;
+		var oth4 = document.getElementById('other4').value;
+		var oth5 = document.getElementById('other5').value;
+
+		var regex = /[0-9]/g;
+
+	 	if((indicomp[0].checked) && (name == "")){
+		   	alert("Donor Name cannot be blank!");
+		    
+	  	}
+
+	  	else if((indicomp[1].checked) && (company == "")){
+	  		alert("Please Enter Company Name!");
+	  		
+	  	}
+	  	else if (addr == ""){
+	  		alert("Please Enter Address!");
+	  	}
+  		else if( (std != "" && landline == "") || (std == "" && landline != "")){
+  			alert("Enter Proper Telephone no. with correct std/isd code!");
+  		}
+  		else if (item1 == "" && weight1 =="" && price1 == ""){
+  			alert("Please fill the first entry!");
+  			
+  		}
+  		else if (item1 == "" || weight1 == "" || price1 == ""){
+  			alert("First Entry is incomplete!");
+  			
+  		}
+  		else if (item1 != "ईतर" && item1 != "" && !(regex.test(weight1))){
+  			alert("Please Enter Quantity of item 1 using digits only");
+
+  		}
+  		else if(price1 != "" && !(regex.test(price1))){
+  			alert("Enter Amount of First Item using numbers only!");
+  		}
+  		else if ((item2 == "" || weight2 == "" || price2 == "") && !(item2 == "" && weight2 == "" && price2 == "")){
+  			alert("Second Entry is Incomplete!");
+
+  		}
+
+  		else if ((item3 != "" || weight3 != "" || price3 != "") && (item2 == "" && weight2 == "" && price2 == "")){
+  			alert("Fill Second Entry before Third entry!");
+
+  		}
+  		else if (item2 != "ईतर" && item2 != "" && !(regex.test(weight2)))
+  		{
+  			alert("Please Enter Quantity of item 2 using digits only");
+  		}
+   		else if(price2 != "" && !(regex.test(price2))){
+  			alert("Enter Amount of Second Item using numbers only!");
+  		}
+  		else if ((item3 == "" || weight3 == "" || price3 == "") && !(item3 == "" && weight3 == "" && price3 == "")){
+  			alert("Third Entry is Incomplete!");
+
+  		}
+  		else if ((item4 != "" || weight4 != "" || price4 != "") && (item3 == "" && weight3 == "" && price3 == "")){
+  			alert("Fill Third Entry before Fourth entry!");
+
+  		}
+  		else if (item3 != "ईतर" && item3 != ""  && !(regex.test(weight3)))
+  		{
+  			alert("Please Enter Quantity of item 3 using digits only");
+  		}
+  	  	else if(price3 != "" && !(regex.test(price3))){
+  			alert("Enter Amount of Third Item using numbers only!");
+  		}
+  		else if ((item4 == "" || weight4 == "" || price4 == "") && !(item4 == "" && weight4 == "" && price4 == "")){
+  			alert("Fourth Entry is Incomplete!");
+
+  		}
+  		else if ((item5 != "" || weight5 != "" || price5 != "") && (item4 == "" && weight4 == "" && price4 == "")){
+  			alert("Fill Fourth Entry before Fifth entry!");
+
+  		}
+  		else if (item4 != "ईतर" && item4 != ""  && !(regex.test(weight4)))
+  		{
+  			alert("Please Enter Quantity of item 4 using digits only");
+  		}
+  		else if(price4 != "" && !(regex.test(price4))){
+  			alert("Enter Amount of Fourth Item using numbers only!");
+  		}
+  		else if ((item5 == "" || weight5 == "" || price5 == "") && !(item5 == "" && weight5 == "" && price5 == "")){
+  			alert("Fifth Entry is Incomplete!");
+
+  		}
+  		else if (item5 != "ईतर" && item5 != ""  && !(regex.test(weight5)))
+  		{
+  			alert("Please Enter Quantity of item 5 using digits only");
+  		}
+   		else if(price5 != "" && !(regex.test(price5))){
+  			alert("Enter Amount of Fifth Item using numbers only!");
+  		}
+  		else if (item1 == "ईतर" && oth1==""){
+  			alert("For entry 1, please fill textbox if ईतर is selected!");
+  		}
+  		else if (item2 == "ईतर" && oth2==""){
+  			alert("For entry 2, please fill textbox if ईतर is selected!");
+  		}
+  		else if (item3 == "ईतर" && oth3==""){
+  			alert("For entry 3, please fill textbox if ईतर is selected!");
+  		}
+  		else if (item4 == "ईतर" && oth4==""){
+  			alert("For entry 4, please fill textbox if ईतर is selected!");
+  		}
+  		else if (item5 == "ईतर" && oth5==""){
+  			alert("For entry 5, please fill textbox if ईतर is selected!");
+  		}
+  		else{
+  			frm.submit();
+			window.open("http://127.0.0.1:5000/temp", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=25,left=50,width=900,height=650");
+  		}
+  	}
+
+
+</script>
+
+{% endblock %}
+
+{% block navbar %}
+<div class="nav1">
+	<ul>
+	  <li><a href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a class="active" href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept">Cancel Reciept</a></li>
+	  {% endif %}
+	  <li><a href="http://127.0.0.1:5000/date_change">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report">Generate Report</a></li>
+	  {% if admin == "Yes" %}
+	  <li><a href="http://127.0.0.1:5000/register">Create New User</a></li>
+	  {% endif %}
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div id="form">
+
+	<form action="#" method="POST" id="reciept2" name="reciept2" required>
+
+		
+		<div id="details" style="width: 100%; float:left; padding-top: 0px; padding-left: 10px; padding-bottom: 0px; padding-right: 20px;background-color: #f2f2f2; border-radius: 10px;" >
+	
+			
+			<div style="float: right; margin-right: 105px ">
+				<label for="date" style="margin-left:0px">दिनांक: </label>
+				<input type="date" name="date" id="datePicker" style="padding: 6px 10px; margin-left: 45px; width:150px;">
+			</div>
+			<div style="float: left;width: 50%">
+
+				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+				<input type="radio" name="indicomp" value="individual" id="indi" checked="checked" onclick="indiv()">
+				<label for="individual">वैयक्तिक</label>
+				&emsp;&emsp;&emsp;&emsp;
+				<input type="radio" name="indicomp" value="org" id="comp" onclick="orga();">
+				<label for="org">संस्था</label>
+				<p font=20px><b>देणार्‍याचा तपशील:</b></p>
+				<div id="name" style="padding-top: 0px; margin-top: 0px; margin-bottom: 10px;">
+
+					<table>
+						<tr>
+							<td>देणार्‍याचे नाव:</td>
+							<td>
+								<textarea rows="3" name="name" id="nm" placeholder="Enter Donor Name(s)" style="width: 425px"></textarea>
+						</tr>
+						<tr>
+							<td style="padding-right: 24px; font-size: 16 "><input type="checkbox" id="behalfcheck" name="behalfcheck" onclick="on_behalf()" value="check"><label for="behalfcheck" style="padding-left: 20px">प्रीत्यर्थ:</label></td>
+							<td>
+							<textarea rows="3" name="onbehalf" disabled="disabled" id="onbehalf" placeholder="Multiple Entries Allowed (optional field)" style="width: 100%;"></textarea>
+							</td>
+						</tr>
+					</table>
+						
+				</div>
+				<label for="company">संस्थेचे नाव:</label>
+				<input type="text" id="company" disabled name="company" placeholder="Enter Name of Organization" style="width: 100%;">
+			
+			</div>
+
+			<div style="float: right; margin-right:100px; margin-top: 10px">
+				
+				<table>
+					<tr>
+						<td>पत्ता:</td>
+						<td><textarea rows="3" id ="address" name="address" style="width: 250px" placeholder="Enter Address"></textarea></td>
+					</tr>
+					<tr>
+						<td>मोबाइल नंबर:</td>
+						<td><input type="text" name="country" id="country" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 43" value="+91" style="width: 70px" maxlength="5"><input type="text" id="mobile" name="mobile_no" style="width: 180px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" placeholder="Enter Mobile Number"></td>
+					</tr>
+					<tr>
+						<td>दूरध्वनी नंबर:</td>
+						<td><input type="text" id="std" name="std" style="width: 70px; padding: 8px 8px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="10" placeholder="STD/ISD"><input type="text" id="landline" name="landline_no" style="width: 180px" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="8" placeholder="Enter Number"></td>
+					</tr>
+					<tr>
+						<td>ईमेल आयडी:</td>
+						<td><input type="email" name="email" style="width: 250px" placeholder="Enter Email Id (optional)"></td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="items" style="float: left; padding-top: 20px; padding-left: 0px; padding-bottom: 10px; padding-right: 10px; width: 100%; background-color: #f2f2f2; border-radius: 0px 0px 10px 10px;" >
+				
+				<table cellspacing="0" style="border-collapse: collapse;">
+					<tr>
+						<th>क्र.</th>
+						<th>वस्तूचे नाव</th>
+						<th>नग/वजन</th>
+						<th>अंदाजे किंमत</th>
+					</tr>
+					<tr>
+						<td style="text-align: center; width: 50px;">१</td>
+						<td style="text-align: center"><select name="item1" id="item1" onchange="o1(this)">
+								<option value="">Select</option>
+								<option value="६ वारी साडी">६ वारी साडी</option>
+								<option value="९ वारी साडी">९ वारी साडी</option>
+								<option value="पैठणी">पैठणी</option>
+								<option value="शालू">शालू</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							<input type="text" name="other1" id="other1" style="width: 200px;margin: 3px 0px"></td>
+						<td style="width: 290px; text-align: center;"><input type="text" name="weight1" id="weight1" style="margin: 3px 0px"></td>
+						<td><input type="text" name="price1" id="price1" style="margin: 3px 0px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center; width: 50px;">२</td>
+						<td style="text-align: center; width: 490px"><select name="item2" id="item2" onchange="o2(this);">
+								<option value="">Select</option>
+								<option value="६ वारी साडी">६ वारी साडी</option>
+								<option value="९ वारी साडी">९ वारी साडी</option>
+								<option value="पैठणी">पैठणी</option>
+								<option value="शालू">शालू</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							<input type="text" name="other2" id="other2" style="width: 200px;margin: 3px 0px"></td>
+							<td style="width: 290px; text-align: center;"><input type="text" name="weight2" id="weight2" style="margin: 3px 0px"></td>
+						<td><input type="text" name="price2" id="price2" style="margin: 3px 0px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center; width: 50px;">३</td>
+						<td style="text-align: center"><select name="item3" id="item3" onchange="o3(this);">
+								<option value="">Select</option>
+								<option value="६ वारी साडी">६ वारी साडी</option>
+								<option value="९ वारी साडी">९ वारी साडी</option>
+								<option value="पैठणी">पैठणी</option>
+								<option value="शालू">शालू</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							<input type="text" name="other3" id="other3" style="width: 200px;margin: 3px 0px"></td>
+						<td style="width: 290px; text-align: center;"><input type="text" name="weight3" id="weight3" style="margin: 3px 0px"></td>
+						<td><input type="text" name="price3" id="price3" style="margin: 3px 0px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center; width: 50px;">४</td>
+						<td style="text-align: center"><select name="item4" id="item4" onchange="o4(this);">
+								<option value="">Select</option>
+								<option value="६ वारी साडी">६ वारी साडी</option>
+								<option value="९ वारी साडी">९ वारी साडी</option>
+								<option value="पैठणी">पैठणी</option>
+								<option value="शालू">शालू</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							<input type="text" name="other4" id="other4" style="width: 200px;margin: 3px 0px"></td>
+						<td style="width: 290px; text-align: center;"><input type="text" name="weight4" id="weight4" style="margin: 3px 0px"></td>
+						<td><input type="text" name="price4" id="price4" style="margin: 3px 0px"></td>
+					</tr>
+					<tr>
+						<td style="text-align: center; width: 50px;">५</td>
+						<td style="text-align: center"><select name="item5" id="item5" onchange="o5(this);">
+								<option value="">Select</option>
+								<option value="६ वारी साडी">६ वारी साडी</option>
+								<option value="९ वारी साडी">९ वारी साडी</option>
+								<option value="पैठणी">पैठणी</option>
+								<option value="शालू">शालू</option>
+								<option value="ईतर">ईतर</option>
+							</select>
+							<input type="text" name="other5" id="other5" style="width: 200px;margin: 3px 0px"></td>
+						<td style="width: 290px; text-align: center;"><input type="text" name="weight5" id="weight5" style="margin: 3px 0px"></td>
+						<td><input type="text" name="price5" id="price5" style="margin: 3px 0px"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+	</form>
+
+	<div style="margin-top: 0px; float: bottom">
+	
+		<center><input type="button" value="Submit" onclick="validateForm();" style="margin-top: 10px;"></center>
+
+	</div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+	document.getElementById("other1").disabled = true;
+	document.getElementById("other2").disabled = true;
+	document.getElementById("other3").disabled = true;
+	document.getElementById("other4").disabled = true;
+	document.getElementById("other5").disabled = true;
+
+	function o1(e){
+		if (e.value == "ईतर"){
+			document.getElementById("other1").disabled = false;
+		}
+		else{
+			document.getElementById("other1").disabled = true;
+		}
+	}
+	function o2(e){
+		if (e.value == "ईतर"){
+			document.getElementById("other2").disabled = false;
+		}
+		else{
+			document.getElementById("other2").disabled = true;
+		}
+	}
+	function o3(e){
+		if (e.value == "ईतर"){
+			document.getElementById("other3").disabled = false;
+		}
+		else{
+			document.getElementById("other3").disabled = true;
+		}
+	}
+	function o4(e){
+		if (e.value == "ईतर"){
+			document.getElementById("other4").disabled = false;
+		}
+		else{
+			document.getElementById("other4").disabled = true;
+		}
+	}
+	function o5(e){
+		if (e.value == "ईतर"){
+			document.getElementById("other5").disabled = false;
+		}
+		else{
+			document.getElementById("other5").disabled = true;
+		}
+	}
+
+	Date.prototype.toDateInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,10);
+	});
+
+	document.getElementById('datePicker').value = new Date().toDateInputValue();
+	
+  	
+  	function indiv() {
+  		document.getElementById("company").disabled = true;
+  		document.getElementById("nm").disabled = false;
+  		document.getElementById("behalfcheck").disabled = false;
+  	}
+
+  	function orga(){
+  		document.getElementById("company").disabled = false;
+  		document.getElementById("nm").disabled = true;
+  		document.getElementById("behalfcheck").checked = false
+  		document.getElementById("onbehalf").disabled = true;
+  		document.getElementById("behalfcheck").disabled = true;
+  	}
+
+  	function on_behalf() {
+  		var checkbox = document.getElementById("behalfcheck");
+  		if(checkbox.checked == true){
+  			document.getElementById("onbehalf").removeAttribute("disabled")
+  		}
+  		else{
+  			document.getElementById("onbehalf").setAttribute("disabled", "disabled");		
+  		}
+  	}
+
+
+
+  	
+
+</script>
+
+{% endblock %}

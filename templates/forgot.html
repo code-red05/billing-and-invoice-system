@@ -1,0 +1,120 @@
+<html>
+	<head>
+		<title>Forgot Password</title>
+		<style>
+			input[type=text], input[type=password], select {
+				width: 100%;
+				padding: 12px 20px;
+				margin: 8px 0;
+				display: inline-block;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-sizing: border-box;
+			}
+
+			input[type=submit],input[type=button] {
+				width: 100%;
+				background-color: #4CAF50;
+				color: white;
+				padding: 14px 20px;
+				margin: 8px 0;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+
+			input[type=submit]:hover, input[type=button]:hover {
+				background-color: #45a049;
+			}
+
+			#form {
+				border-radius: 10px;
+				background-color: #f2f2f2;
+				padding: 20px;
+				margin-top: 50px;
+				margin-left: auto;
+				margin-right: auto;
+				width: 600px;
+			}
+		</style>
+		<script type="text/javascript">
+			function password_validate(){
+				var pwd1 = document.getElementById("pwd1").value;
+				form = document.getElementById("form3");
+				if (pwd1.length<6){
+					alert("Password Should be atleast 6 characters long!");
+				}
+				else{
+					form.submit();
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="msg" style="margin-top: 10px; color: #FF0000">
+
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for msg in messages %}
+					<p><center>{{msg}}</center></p>
+				{% endfor %}
+			{% endif %}
+			{% if not messages %}
+				<br>
+			{% endif %}
+		{% endwith %}
+
+		</div>
+
+		<h1 style="color: #4CAF50; text-align: center;">Forgot Password</h1>
+
+		<div id="form">
+
+		{% if form == 1 %}
+		<form action="#" method="POST">
+			<input type="hidden" name="fname" value="1">
+			<h2>Change Password</h2>
+			<p>Username:</p>
+			<input type="text" name="uname" placeholder="Enter Username...">
+			<br><br><br>
+			<input type="submit" value="Submit">
+		
+		</form>
+		{% endif %}
+		{% if form == 2 %}
+		<form action="#" method="POST">
+			<input type="hidden" name="fname" value="2">
+			<h2>Change Password</h2>
+			<br>
+			<p>Security Question:&emsp;{{question}}</p>
+			<br>
+			<p>Answer:</p>
+			<input type="text" name="ans" placeholder="Enter Answer To Security Question..." >
+			<br><br><br>
+			<input type="submit" value="Submit">
+		
+		</form>
+		{% endif %}
+		{% if form == 3 %}
+		<form action="#" method="POST" id="form3">
+			<input type="hidden" name="fname" value="3">
+			<h2>Change Password</h2>
+			<p>Enter New Password</p>
+			<input type="password" name="pwd1" id="pwd1" placeholder="Confirm Password...">
+			<br>
+			<p>Confirm New Password:</p>
+			<input type="password" name="pwd2" placeholder="Confirm Password..." >
+			<br><br><br>
+			<input type="button" value="Submit" onclick="password_validate();">
+		
+		</form>
+		{% endif %}
+		
+		<br>
+		<p><a href="http://127.0.0.1:5000/login">Click here</a> to login</p>
+		
+		</div>
+	
+	</body>
+</html>

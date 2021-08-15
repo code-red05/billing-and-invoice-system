@@ -1,0 +1,304 @@
+{% extends "user.html" %}
+
+{% block style %}
+
+
+<style>
+
+	input[type=text], input[type=number], input[type=email], input[type=date], textarea, select {
+	  padding: 8px 20px;
+	  margin: 8px 0;
+	  display: inline-block;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	}
+
+	input[type=button], input[type=submit] {
+		width: 10%;
+		background-color: #4CAF50;
+		color: white;
+		padding: 10px 10px;
+		margin: 8px 0;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+	}
+
+	input[type=submit]:hover, input[type=button]:hover{
+		background-color: #45a049;
+	}
+
+	td {
+		width: 160px;
+
+	}
+
+	#form1 #form2 {
+		padding: 10px;
+		margin-right: 50px;
+		float: right;
+		width: 80%;
+		margin-top: 0px;
+		height: 80%;
+		line-height: 14px
+	}
+	 .table{
+	 	border: solid 1px;
+	 	height: 30px;
+	 	width: 100px;
+	 	text-align: center;
+	 }
+
+
+</style>
+
+<script type="text/javascript">
+	function validate1(){
+		var reciept_no = document.getElementById('reciept_no').value;
+		if(reciept_no == ""){
+			alert("Please Enter Reciept No.");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
+	function validate2(){
+		var comments = document.getElementById("comments").value;
+		var form = document.getElementById("reciept");
+		if(comments == ""){
+			alert("Enter Comments!");
+		}
+		else{
+			form.submit();
+		}
+	}
+</script>
+
+{% endblock %}
+
+{% block navbar %}
+<div class="nav1">
+	<ul>
+	  <li><a href="http://127.0.0.1:5000/reciept">New Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/reciept2">Reciept 2</a></li>
+	  <li><a href="http://127.0.0.1:5000/cancel_reciept" class="active">Cancel Reciept</a></li>
+	  <li><a href="http://127.0.0.1:5000/date_change">Change Festival Dates</a></li>
+	  <li><a href="http://127.0.0.1:5000/report">Generate Report</a></li>
+	  <li><a href="http://127.0.0.1:5000/register">Create New User</a></li>
+	  <li style="float: right;background-color: #FF0000"><a href="http://127.0.0.1:5000/logout"><font color="#FFFFFF">Logout</font></a></li>
+	  <li style="float: right;padding: 9px 20px;display: block;text-align: center;text-decoration: none;font-size: 1.2em"><b>Current User : {{name}}</b></li>
+	</ul>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+<div style="margin-left: 450px">
+	<form action="{{url_for('find_reciept')}}" method="POST" name="find" onsubmit="return validate1();">
+		<label for="reciept_type">Reciept Type: </label>
+		<select name="reciept_type">
+			{% if type == "1" %}<option value="1" selected>{% else %}<option value="1">{% endif %}1</option>
+			{% if type == "2" %}<option value="2" selected>{% else %}<option value="2">{% endif %}2</option>
+		</select>
+		&emsp;&emsp;&emsp;
+		<label for="reciept_no">Enter Reciept No.:</label>
+		<input type="number" name="reciept_no" id="reciept_no" value="{{reciept_no if reciept_no}}">
+		&emsp;&emsp;&emsp;
+		<input type="submit" value="Find">
+	</form>
+
+</div>
+{% if found == "Yes" %}
+<div style="float: right;width: 80%; margin-right: 50px;">
+
+
+	<form action="{{url_for('cancel')}}" method="POST" id="reciept" name="reciept" required>
+
+			
+		<div id="details" style="width: 100%; float:left; padding-top: 0px; padding-left: 10px; padding-bottom: 0px; padding-right: 20px;background-color: #f2f2f2; border-radius: 10px" >
+			{% if date %}
+			{% set split_date = date.split('-') %}
+			{% else %}
+			{% set split_date = ["0000","00","0"] %}
+			{% endif %}
+			<div style="width: 100%; margin-right: 105px; line-height: 0px ">
+				Reciept No: <input type="text" name="recino"value="{{reciept_no}}" style="border: 0; background-color: #f2f2f2" readonly="readonly"><div style="float: right; margin-top: 30px; margin-right: 90px">Reciept Date:&emsp;{{split_date[2]+"-"+split_date[1]+"-"+split_date[0]}}</div>
+			</div>
+
+			<div style="float: left;width: 60%">
+
+				<p><b>Donor details:</b></p>
+				<div id="name" style="padding-top: 0px; margin-top: 0px; margin-bottom: 10px;">
+
+					<table>
+						<tr>
+							{% if not don_name == None %}
+							<td>Donor Name(s):</td>
+							<td style="width: 550px;">{{don_name}}</td>
+							{% else %}
+							<td>Organization Name:</td>
+							<td>{{company}}</td>
+							{% endif %}
+						</tr>
+						<tr><td>&emsp;</td></tr>
+						{% if not onbehalf == None %}
+						<tr>
+							<td style="width: 150px">On Behalf of: Late. </td>
+							<td>{{onbehalf}}</td>
+						</tr>
+						{% endif %}
+					</table>
+						
+				</div>
+			
+			</div>
+
+			<div style="float: right; margin-right:100px; margin-top: 50px">
+				
+				<table>
+					<tr>
+						<td>Address: </td>
+						<td>{{address}}</td>
+					</tr>
+					<tr>
+						<td>Mobile No.:</td>
+						<td>{% if not mobile_no == None %}{{mobile_no}}{% endif %}</td>
+					</tr>
+					<tr>
+						<td>Telephone No.:</td>
+						<td>{% if not landline_no == None %}{{landline_no}}{% endif %}</td>
+					</tr>
+					<tr>
+						<td>Email ID:</td>
+						<td>{{email_id}}</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="money" style="float: left; padding-top: 0px; padding-left: 10px; padding-bottom: 10px; padding-right: 10px; width: 100%; background-color: #f2f2f2; border-radius: 0px 0px 10px 10px; margin-top: 10px" >
+			{% if reciept_type == "1" %}
+			<input type="hidden" name="type" value="1">
+				<div style="float: left;width: 50%;">
+
+					<p><b>Donation Details:</b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</p>
+					<table>
+						<tr>
+							<td>Donation Purpose: </td>
+							<td>{{don_purp}}</td>
+						</tr>
+						<tr>
+							<td>Amount:</td>
+							<td>₹ {{amt}}/-</td>
+						</tr>
+						<tr>
+							<td>Amount in words: </td>
+							<td>{{amt_words}}</td>
+						</tr>
+					</table>
+					<br>
+					
+				</div>
+
+				<div id="payment" style="float:right; margin-right: 70px;margin-top: 30px; text-align: left ;display:block">
+
+					<table style="margin-right: 38px">
+						<tr>
+							<td>Donation Method: </td>
+							<td>{{don_meth}}</td>
+						</tr>
+					</table>
+					<div id="pay">
+						<table>
+							{% if not don_meth == "Cash" %}
+							<tr>
+								<td>Payment/Ref. No.</td>
+								<td>{{ref_no}}</td>
+							</tr>
+							<tr>
+								<td>Payment Date:</td>
+								<td>{{pay_date}}</td>
+							</tr>
+							<tr>
+								<td>Bank:</td>
+								<td>{{bank}}</td>
+							</tr>
+							{% endif %}
+						</table>
+							
+					</div>
+
+				</div>
+			{% endif %}
+			{% if reciept_type == "2" %}
+			<input type="hidden" name="type" value="2">
+			<table style="width: 100%;" cellspacing="0">
+				<tr>
+					<th class="table" style="width: 20px">क्र.</th>
+					<th class="table" style="width: 300px">वस्तूचे नाव</th>
+					<th class="table">नग/वजन</th>
+					<th class="table">अंदाजे किंमत</th>
+				</tr>
+				<tr>
+					<td class="table" style="width: 20px">1</td>
+					<td class="table" style="width: 300px">{{item1[0]}}</td>
+					<td class="table">{{item1[1]}}</td>
+					<td class="table">{% if item1[2] %}₹ {% endif %}{{item1[2]}}</td>
+				</tr>
+				<tr>
+					<td class="table" style="width: 20px">2</td>
+					<td class="table" style="width: 300px">{{item2[0]}}</td>
+					<td class="table">{{item2[1]}}</td>
+					<td class="table">{% if item2[2] %}₹ {% endif %}{{item2[2]}}</td>
+				</tr>
+				<tr>
+					<td class="table" style="width: 20px">3</td>
+					<td class="table" style="width: 300px">{{item3[0]}}</td>
+					<td class="table">{{item3[1]}}</td>
+					<td class="table">{% if item3[2] %}₹ {% endif %}{{item3[2]}}</td>
+				</tr>
+				<tr>
+					<td class="table" style="width: 20px">4</td>
+					<td class="table" style="width: 300px">{{item4[0]}}</td>
+					<td class="table">{{item4[1]}}</td>
+					<td class="table">{% if item4[2] %}₹ {% endif %}{{item4[2]}}</td>
+				</tr>
+				<tr>
+					<td class="table" style="width: 20px">5</td>
+					<td class="table" style="width: 300px">{{item5[0]}}</td>
+					<td class="table">{{item5[1]}}</td>
+					<td class="table">{% if item5[2] %}₹ {% endif %}{{item5[2]}}</td>
+				</tr>
+			</table>
+			{% endif %}
+			</div>
+
+
+		</div>
+
+	</form>
+
+	<div style="margin-top: 0px; float: bottom">
+
+		<p>Comments: <input type="text" id="comments" name="comments" form="reciept" placeholder="Enter Comments (Required)" style="width: 50%"></p>
+	
+		<center><input type="button" value="Cancel" style="margin-top: 10px" onclick="validate2();"></center>
+
+	</div>
+
+</div>
+{% endif %}
+
+
+
+
+
+<script type="text/javascript">  	
+
+</script>
+
+{% endblock %}

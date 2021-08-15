@@ -1,0 +1,27 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/navbar.css')}}">
+	<title>Welcome back!</title>
+	{% block style %}{% endblock %}
+</head>
+
+<body>
+	{% block navbar %}{% endblock %}
+	<div style="float:left; position:fixed; height:95%; margin-top: 40px; width: 200px; background-color: #f2f2f2f2">
+		<img src="{{url_for('static', filename='images/main.jpg')}}" style="width: 100%; height: 100%">
+	</div>
+	<div id="msg" style="margin-top: 40px; color: #4CAF50; float:right;  width:80%">
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				{% for msg in messages %}
+					<center>{{msg}}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</center>
+				{% endfor %}
+			{% endif %}
+			{% if not messages %}
+				<br>
+			{% endif %}
+		{% endwith %}
+	</div>
+	{% block content %}{% endblock %}
+</body>
+</html>
